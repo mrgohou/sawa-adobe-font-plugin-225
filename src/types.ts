@@ -27,7 +27,7 @@ export interface DocumentFont {
   style: string;
   postScriptName: string;
   status: 'installed' | 'missing';
-  provider?: 'Adobe Fonts' | 'Google Fonts' | 'System' | 'Unknown' | 'iFonts' | 'DaFont' | 'BeFonts' | 'Fontshare' | '1001 Fonts' | 'DaFontFree';
+  provider?: 'Adobe Fonts' | 'Google Fonts' | 'System' | 'Unknown' | 'iFonts' | 'DaFont' | 'BeFonts' | 'Fontshare' | '1001 Fonts' | 'DaFontFree' | 'Fichier Source';
   googleFontUrl?: string;
   adobeFontUrl?: string;
   fontUrl?: string;

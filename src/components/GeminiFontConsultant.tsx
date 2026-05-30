@@ -22,7 +22,11 @@ const CONSULTANT_TEMPLATES = [
   }
 ];
 
-export default function GeminiFontConsultant() {
+interface GeminiFontConsultantProps {
+  isWidget?: boolean;
+}
+
+export default function GeminiFontConsultant({ isWidget = false }: GeminiFontConsultantProps = {}) {
   const { user, chatHistory, syncChatMessage, clearChatHistory, loginWithGoogle } = useFirebase();
   const [localMessages, setLocalMessages] = useState<ChatMessage[]>([]);
   const [inputPrompt, setInputPrompt] = useState('');
@@ -100,43 +104,45 @@ export default function GeminiFontConsultant() {
   };
 
   return (
-    <div className="border border-[#2d313d] bg-[#15181e] rounded-xl p-6" id="consultant-section">
-      <header className="border-b border-gray-800 pb-4 mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-400" />
-            <h2 className="text-base font-semibold text-gray-150">Assistant de Développement UXP - Gemini API</h2>
+    <div className={isWidget ? "h-full flex flex-col justify-between" : "border border-[#2d313d] bg-[#15181e] rounded-xl p-6"} id="consultant-section">
+      {!isWidget && (
+        <header className="border-b border-gray-800 pb-4 mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              <h2 className="text-base font-semibold text-gray-150">Assistant de Développement UXP - Gemini API</h2>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Interrogez l'intelligence artificielle pour résoudre vos défis d'API Adobe, de bac à sable Windows/macOS, ou d'optimisation.</p>
           </div>
-          <p className="text-xs text-gray-500 mt-1">Interrogez l'intelligence artificielle pour résoudre vos défis d'API Adobe, de bac à sable Windows/macOS, ou d'optimisation.</p>
-        </div>
-        
-        {messages.length > 0 && (
-          <button
-            onClick={handleClearHistory}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-500 hover:text-red-400 border border-transparent hover:border-red-950 hover:bg-red-950/20 rounded-lg cursor-pointer transition-all"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            Effacer
-          </button>
-        )}
-      </header>
+          
+          {messages.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-500 hover:text-red-400 border border-transparent hover:border-red-950 hover:bg-red-950/20 rounded-lg cursor-pointer transition-all"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Effacer
+            </button>
+          )}
+        </header>
+      )}
 
       {/* QUICK SUGGESTIONS TEMPLATES */}
       {messages.length === 0 && (
-        <div className="mb-6 space-y-3">
-          <span className="text-[10px] font-mono text-indigo-400 uppercase font-black block tracking-wider">Modèles de code & Questions Fréquentes</span>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="mb-4 space-y-2">
+          <span className="text-[10px] font-mono text-indigo-400 uppercase font-black block tracking-wider">Modèles & Questions</span>
+          <div className={isWidget ? "grid grid-cols-1 gap-2" : "grid grid-cols-1 md:grid-cols-3 gap-3"}>
             {CONSULTANT_TEMPLATES.map((tpl, i) => (
               <button
                 key={i}
                 onClick={() => handleSendMessage(tpl.prompt)}
-                className="p-3 bg-gray-900/40 hover:bg-slate-900/40 hover:border-slate-800 border border-gray-800/80 rounded-lg text-left text-xs text-gray-400 font-medium cursor-pointer transition-all flex flex-col gap-1.5"
+                className="p-2.5 bg-gray-900/40 hover:bg-[#1473e6]/10 hover:border-[#1473e6]/30 border border-gray-800/80 rounded-lg text-left text-xs text-gray-400 font-medium cursor-pointer transition-all flex flex-col gap-1"
               >
-                <div className="text-gray-200 font-semibold truncate w-full flex items-center justify-between">
+                <div className="text-gray-200 font-semibold truncate w-full flex items-center justify-between text-xs">
                   {tpl.title}
-                  <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />
+                  <ArrowRight className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">"{tpl.prompt}"</p>
+                {!isWidget && <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">"{tpl.prompt}"</p>}
               </button>
             ))}
           </div>
@@ -144,7 +150,7 @@ export default function GeminiFontConsultant() {
       )}
 
       {/* CHAT THREAD VIEW */}
-      <div className="flex flex-col gap-4 max-h-[460px] overflow-y-auto mb-5 pr-1.5">
+      <div className={`flex flex-col gap-3 overflow-y-auto mb-4 pr-1.5 ${isWidget ? 'max-h-[310px] flex-1' : 'max-h-[460px]'}`}>
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -210,11 +216,11 @@ export default function GeminiFontConsultant() {
       </div>
 
       {/* CHATBAR INPUT */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 shrink-0">
         <input
           disabled={loading}
           type="text"
-          placeholder="Posez votre question sur les API Adobe UXP (ex: comment scanner les mogrts)..."
+          placeholder={isWidget ? "Une question ?" : "Posez votre question sur les API Adobe UXP..."}
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -223,10 +229,10 @@ export default function GeminiFontConsultant() {
         <button
           disabled={loading || !inputPrompt.trim()}
           onClick={() => handleSendMessage()}
-          className="px-4 py-2.5 bg-[#1473e6] disabled:bg-gray-850 disabled:text-gray-600 hover:bg-[#1162c4] text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+          className="px-4 py-2.5 bg-[#1473e6] disabled:bg-gray-850 disabled:text-gray-600 hover:bg-[#1162c4] text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0"
         >
           <Send className="w-3.5 h-3.5" />
-          Envoyer
+          {!isWidget && "Envoyer"}
         </button>
       </div>
     </div>

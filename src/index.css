@@ -1,1 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@keyframes sweep {
+  0% {
+    top: 5%;
+    opacity: 0.4;
+  }
+  50% {
+    top: 95%;
+    opacity: 1;
+  }
+  100% {
+    top: 5%;
+    opacity: 0.4;
+  }
+}
+
+.animate-sweep {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  animation: sweep 2s infinite ease-in-out;
+}
+
+/* Premium SaaS landing page pattern backdrop */
+.grid-mesh {
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(220, 192, 247, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(143, 224, 235, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(163, 234, 210, 0.04) 0px, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+}
+
+.subtle-neon-glow {
+  box-shadow: 0 0 20px rgba(163, 234, 210, 0.15);
+}
+
+.purple-neon-glow {
+  box-shadow: 0 0 20px rgba(220, 192, 247, 0.15);
+}
+

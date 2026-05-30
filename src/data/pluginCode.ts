@@ -12,6 +12,13 @@ export const PLUGIN_CODE_FILES: CodeFile[] = [
   "version": "1.0.0",
   "main": "index.html",
   "manifestVersion": 5,
+  "versions": {
+    "plugin": "1.0.0",
+    "minimumUXP": "5.0.0"
+  },
+  "lifecycle": {
+    "startup": "open"
+  },
   "description": "Scannez vos documents pour identifier et activer les polices manquantes à l'aide d'Adobe Fonts et Google Fonts.",
   "icons": [
     { "width": 23, "height": 23, "path": "icons/icon_23.png", "scale": [ 1, 2 ] },
