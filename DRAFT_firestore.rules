@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net: Default Deny All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // General helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Entity validation helpers
+    function isValidInstalledFont(data) {
+      return data.keys().hasAll(['userId', 'fontFamily', 'installedAt'])
+        && data.keys().size() == 3
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.fontFamily is string
+        && data.fontFamily.size() >= 1
+        && data.fontFamily.size() <= 150
+        && data.installedAt is timestamp;
+    }
+
+    function isValidScanHistory(data) {
+      return data.keys().hasAll(['userId', 'documentName', 'hostApp', 'missingCount', 'scannedAt'])
+        && data.keys().size() == 5
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.documentName is string
+        && data.documentName.size() >= 1
+        && data.documentName.size() <= 200
+        && data.hostApp is string
+        && data.hostApp.size() >= 1
+        && data.hostApp.size() <= 100
+        && data.missingCount is int
+        && data.missingCount >= 0
+        && data.scannedAt is timestamp;
+    }
+
+    function isValidChatMessage(data) {
+      return data.keys().hasAll(['userId', 'role', 'content', 'createdAt'])
+        && data.keys().size() == 4
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.role is string
+        && (data.role == 'user' || data.role == 'model')
+        && data.content is string
+        && data.content.size() <= 20000
+        && data.createdAt is timestamp;
+    }
+
+    // Match blocks with Path Variable Hardening and Master Gate Identity Verification
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+
+      // Sub-collections under the user
+      match /installedFonts/{fontId} {
+        allow read, delete: if isOwner(userId) && isValidId(userId) && isValidId(fontId);
+        allow create: if isOwner(userId) && isValidId(userId) && isValidId(fontId)
+          && isValidInstalledFont(request.resource.data)
+          && request.resource.data.userId == userId
+          && request.resource.data.installedAt == request.time;
+        allow update: if false; // Fonts are immutable once logged (add/remove only)
+      }
+
+      match /scans/{scanId} {
+        allow read, delete: if isOwner(userId) && isValidId(userId) && isValidId(scanId);
+        allow create: if isOwner(userId) && isValidId(userId) && isValidId(scanId)
+          && isValidScanHistory(request.resource.data)
+          && request.resource.data.userId == userId
+          && request.resource.data.scannedAt == request.time;
+        allow update: if false; // Scans are immutable history logs
+      }
+
+      match /chats/{chatId} {
+        allow read, delete: if isOwner(userId) && isValidId(userId) && isValidId(chatId);
+        allow create: if isOwner(userId) && isValidId(userId) && isValidId(chatId)
+          && isValidChatMessage(request.resource.data)
+          && request.resource.data.userId == userId
+          && request.resource.data.createdAt == request.time;
+        allow update: if false; // AI Chat logs are append-only (create/delete)
+      }
+    }
+  }
+}

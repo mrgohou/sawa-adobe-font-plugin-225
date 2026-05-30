@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "InstalledFont": {
+      "title": "InstalledFont",
+      "description": "A font that the user has marked as installed in the cloud.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Authentication User UID"
+        },
+        "fontFamily": {
+          "type": "string",
+          "description": "The name of the font family"
+        },
+        "installedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp of the installation"
+        }
+      },
+      "required": [
+        "userId",
+        "fontFamily",
+        "installedAt"
+      ]
+    },
+    "ScanHistory": {
+      "title": "ScanHistory",
+      "description": "Records of UXP document scans.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the authenticated user"
+        },
+        "documentName": {
+          "type": "string",
+          "description": "Name of the scanned document"
+        },
+        "hostApp": {
+          "type": "string",
+          "description": "Adobe host application"
+        },
+        "missingCount": {
+          "type": "integer",
+          "description": "Number of missing fonts resolved or remaining"
+        },
+        "scannedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp of scanning"
+        }
+      },
+      "required": [
+        "userId",
+        "documentName",
+        "hostApp",
+        "missingCount",
+        "scannedAt"
+      ]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Messages sent in the Gemini Consultant Chat.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the authenticated user"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "model"
+          ],
+          "description": "Role of the message sender"
+        },
+        "content": {
+          "type": "string",
+          "description": "Text content of the message"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp of the message"
+        }
+      },
+      "required": [
+        "userId",
+        "role",
+        "content",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "users/{userId}/installedFonts/{fontId}": {
+      "schema": "InstalledFont",
+      "description": "Synced list of installed custom fonts"
+    },
+    "users/{userId}/scans/{scanId}": {
+      "schema": "ScanHistory",
+      "description": "Synced document scan history events"
+    },
+    "users/{userId}/chats/{chatId}": {
+      "schema": "ChatMessage",
+      "description": "Chat log history with Gemini Consultant"
+    }
+  }
+}
