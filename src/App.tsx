@@ -132,12 +132,77 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[#1b1c22]/80 px-6 py-3.5 flex items-center justify-between max-w-7xl mx-auto rounded-b-2xl bg-[#07080a]/80 transition-all duration-300">
 
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF6633] to-[#ff8c59] flex items-center justify-center font-black text-black text-base select-none shadow-lg shadow-[#FF6633]/20">
-            S
+          {/* Sawa Custom Vector Logo */}
+          <div className="w-9 h-9 flex items-center justify-center select-none shadow-lg shadow-[#8FE0EB]/10 rounded-xl bg-[#0a0b0d] p-0.5 border border-[#202128]/35">
+            <svg 
+              viewBox="0 0 100 100" 
+              className="w-full h-full" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="logoBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#DCC0F7" />
+                  <stop offset="50%" stopColor="#8FE0EB" />
+                  <stop offset="100%" stopColor="#A3EAD2" />
+                </linearGradient>
+              </defs>
+              
+              {/* Outer custom rounded border matching user logo file */}
+              <rect 
+                x="7" 
+                y="7" 
+                width="86" 
+                height="86" 
+                rx="18" 
+                stroke="url(#logoBorder)" 
+                strokeWidth="8" 
+                fill="none" 
+              />
+              
+              {/* Top horizontal block bar */}
+              <rect 
+                x="35" 
+                y="24" 
+                width="40" 
+                height="8" 
+                rx="2" 
+                fill="#DCC0F7" 
+              />
+              
+              {/* Center vertical down stem */}
+              <rect 
+                x="46" 
+                y="32" 
+                width="8" 
+                height="40" 
+                rx="1" 
+                fill="#8FE0EB" 
+              />
+              
+              {/* Arrow wing paths */}
+              <path 
+                d="M26 48 L50 72 L74 48" 
+                stroke="#8FE0EB" 
+                strokeWidth="8" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+              />
+              
+              {/* Bottom anchor block square */}
+              <rect 
+                x="46" 
+                y="81" 
+                width="8" 
+                height="8" 
+                rx="1" 
+                fill="#A3EAD2" 
+              />
+            </svg>
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className={`text-sm font-black tracking-tight font-sans ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>SAWA</span>
+              <span className={`text-sm font-black tracking-tight font-sans ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>ADOBE</span>
               <span className="text-[9px] font-mono font-bold bg-[#FF6633]/15 text-[#FF6633] border border-[#FF6633]/20 px-1 py-0.2 rounded uppercase">Font Finder</span>
             </div>
             <span className="text-[10px] text-gray-500 font-mono">Adobe UXP Extension Kit</span>
@@ -222,9 +287,9 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-black tracking-tight text-white leading-[1.05] max-w-4xl mx-auto">
-            Trouvez et installez vos polices <br />
+            Trouvez et installez vos polices <span> </span>
             <span className="bg-gradient-to-r from-[#A3EAD2] via-[#8FE0EB] to-[#DCC0F7] bg-clip-text text-transparent opacity-95">
-              directement dans vos calques
+               directement dans vos calques
             </span>
           </h1>
 
