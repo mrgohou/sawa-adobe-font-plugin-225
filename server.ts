@@ -9,7 +9,7 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Server-side API endpoint for the Gemini UXP Consultant Assistant
+  // Server-side API endpoint for the Gemini Typography & Font Consultant
   app.post('/api/consultant', async (req, res) => {
     const { prompt, history } = req.body;
 
@@ -17,17 +17,23 @@ async function startServer() {
     if (!apiKey) {
       return res.status(200).json({
         error: "Missing API Key",
-        response: "L'assistant IA fonctionne actuellement en mode local car la clé GEMINI_API_KEY n'a pas été configurée dans votre panneau d'environnement. Voici une réponse experte simulée quant au développement de plugins Adobe UXP :\\n\\nPour interroger le catalogue localement, privilégiez le fichier `manifest.json` avec la permission `network` stipulée. Les APIs spécifiques à l'hôte comme `require('photoshop').app` requièrent une exécution asynchrone complète pour éviter de bloquer l'interface Spectrum."
+        response: "L'assistant IA fonctionne actuellement en mode local car la clé GEMINI_API_KEY n'a pas été configurée dans votre panneau d'environnement. Voici une recommandation typographique simulée :\\n\\nPour associer des polices avec élégance, optez pour un fort contraste ! Mariez une police de titre géométrique expressive (comme 'Orbitron' ou 'Clash Grotesk') avec une police de labeur néo-grotesque neutre et ultra-lisible (comme 'Inter' ou 'Plus Jakarta Sans'). Limitez votre design à 2 familles typographiques maximales pour maintenir une hiérarchie visuelle claire et ultra-professionnelle."
       });
     }
 
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({
+        apiKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          }
+        }
+      });
       
-      const systemInstruction = `You are an expert Adobe CC UXP Plugin Developer Consultant.
-You deeply understand UXP (Unified Extensibility Platform), Spectrum CSS, Adobe UXP storage, Photoshop, Illustrator, Premiere Pro, InDesign, InCopy, After Effects APIs.
-You answer questions in French, helping developers write, optimize or debug code for scanning documents, finding missing fonts, or making network requests (Google Fonts / Adobe Fonts APIs).
-Keep your answers highly code-focused, practical, precise, and formatted in Markdown.`;
+      const systemInstruction = `You are an expert Typography and Font Consultant in Graphic Design (Sawa Font Scout Bot).
+You deeply understand font pairings, typographic hierarchy, visual design principles, classification of typefaces (e.g., Humanist, Geometric, Didone, Garalde, slab-serifs), readability, legibility in print and digital media, font licensing rules, and typography history.
+You answer in French. Help users elevate their graphic design projects, typography choices, pairings, layouts, and technical considerations. Keep answers extremely professional, elegant, inspiring, structural, and formatted beautifully in Markdown with practical examples.`;
 
       // Format conversation history
       const contents = [];
@@ -42,7 +48,7 @@ Keep your answers highly code-focused, practical, precise, and formatted in Mark
       contents.push({ role: 'user', parts: [{ text: prompt }] });
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.5-flash',
         contents: contents,
         config: {
           systemInstruction: systemInstruction,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Search, AlertCircle, CheckCircle2, FileVideo, FileText, FileSpreadsheet, Download, Activity, HelpCircle, Layers, Settings, AppWindow, HelpCircle as HelpIcon, Cloud, History, Upload, Trash2, File, Sparkles, Check } from 'lucide-react';
+import { Play, Search, AlertCircle, CheckCircle2, FileVideo, FileText, FileSpreadsheet, Download, Activity, HelpCircle, Layers, Settings, AppWindow, HelpCircle as HelpIcon, Cloud, History, Upload, Trash2, File, Sparkles, Check, Eye, BookOpen } from 'lucide-react';
 import { motion } from 'motion/react';
 import { HOST_APPS, SYSTEM_FONTS_DATABASE, GOOGLE_FONTS_CATALOG, PREMIUM_FONTS_CATALOG } from '../data/simulatorData';
 import { HostApp, SampleFile, DocumentFont } from '../types';
@@ -155,6 +155,27 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
   const [downloadSuccessMessage, setDownloadSuccessMessage] = useState<string | null>(null);
   const [showAutoPopup, setShowAutoPopup] = useState(false);
   const [lastDismissedFileId, setLastDismissedFileId] = useState<string | null>(null);
+
+  // Font preview modal states
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [activeFontForPreview, setActiveFontForPreview] = useState<DocumentFont | null>(null);
+  const [previewText, setPreviewText] = useState('Portez ce vieux whisky au juge blond qui fume.');
+  const [previewSize, setPreviewSize] = useState(32);
+  const [previewBg, setPreviewBg] = useState('#121316');
+  const [previewTextColor, setPreviewTextColor] = useState('#A3EAD2');
+
+  const handlePreviewFont = (font: DocumentFont) => {
+    const linkId = `font-preview-${font.family.replace(/\s+/g, '-')}`;
+    if (!document.getElementById(linkId)) {
+      const link = document.createElement('link');
+      link.id = linkId;
+      link.rel = 'stylesheet';
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font.family)}:wght@400;700;900&display=swap`;
+      document.head.appendChild(link);
+    }
+    setActiveFontForPreview(font);
+    setShowPreviewModal(true);
+  };
 
   // Custom User Uploaded Files States
   const [uploadedFiles, setUploadedFiles] = useState<SampleFile[]>([]);
@@ -1203,16 +1224,26 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                               isDarkMode ? 'bg-[#292c35] border-[#383c48] text-gray-150' : 'bg-white border-slate-200 text-slate-700 font-semibold'
                             }`}>
                               <span className="truncate pr-1">{f.family}</span>
-                              <button 
-                                onClick={() => isInstalled ? null : handleOpenGoogleFontHelp(f)}
-                                className={`px-2.5 py-0.5 rounded-full text-[9px] font-black transition-all cursor-pointer ${
-                                  isInstalled 
-                                    ? 'text-emerald-400 bg-emerald-950/20 border border-emerald-900/35' 
-                                    : 'text-sky-400 bg-sky-950/40 hover:bg-sky-900/40 border border-sky-900/25'
-                                }`}
-                              >
-                                {isInstalled ? 'Dispo' : 'Installer'}
-                              </button>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <button
+                                  onClick={() => handlePreviewFont(f)}
+                                  className="px-2 py-0.5 bg-sky-950/20 hover:bg-sky-900/40 text-sky-400 hover:text-sky-300 border border-sky-900/50 rounded-full text-[8.5px] font-bold cursor-pointer flex items-center gap-1 transition-all"
+                                  title="Aperçu interactif"
+                                >
+                                  <Eye className="w-2.5 h-2.5" />
+                                  Aperçu
+                                </button>
+                                <button 
+                                  onClick={() => isInstalled ? null : handleOpenGoogleFontHelp(f)}
+                                  className={`px-2.5 py-0.5 rounded-full text-[9px] font-black transition-all cursor-pointer ${
+                                    isInstalled 
+                                      ? 'text-emerald-400 bg-emerald-950/20 border border-emerald-900/35' 
+                                      : 'text-sky-400 bg-sky-950/40 hover:bg-sky-900/40 border border-sky-900/25'
+                                  }`}
+                                >
+                                  {isInstalled ? 'Dispo' : 'Installer'}
+                                </button>
+                              </div>
                             </div>
                           );
                         })
@@ -1245,7 +1276,7 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                         </div>
                       </div>
                       <motion.div 
-                        className="flex flex-col gap-2 max-h-56 overflow-y-auto pr-1"
+                        className="flex flex-col gap-2 max-h-[450px] overflow-y-auto pr-1"
                         initial="hidden"
                         animate="show"
                         variants={{
@@ -1274,8 +1305,10 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                                 } 
                               }
                             }}
-                            className={`p-3 rounded-xl flex flex-col gap-1.5 border-2 transition-colors duration-300 ${
-                              isDarkMode ? 'bg-[#252834]/80 border-[#383c48]' : 'bg-white border-slate-250 shadow-xxs'
+                            className={`p-3 rounded-xl flex flex-col gap-1.5 border-2 transition-all duration-300 hover:scale-[1.018] hover:-translate-y-0.5 ${
+                              isDarkMode 
+                                ? 'bg-[#252834]/80 border-[#383c48] hover:border-[#8FE0EB]/50 hover:bg-[#2c2f3d]/90 hover:shadow-lg hover:shadow-cyan-900/10' 
+                                : 'bg-white border-slate-250 shadow-xxs hover:border-indigo-400/50 hover:shadow-md hover:shadow-indigo-500/5'
                             }`}
                           >
                             <div className="flex justify-between items-start">
@@ -1283,23 +1316,33 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                                 <span className={`text-[10px] font-semibold transition-colors duration-300 ${isDarkMode ? 'text-gray-100' : 'text-slate-800'}`}>{font.family}</span>
                                 <span className="text-[8px] text-gray-500">{font.style} | PS: {font.postScriptName}</span>
                               </div>
-                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border ${
-                                font.status === 'installed'
-                                  ? (isDarkMode ? 'bg-[#1c2e4a] text-[#30a1ff] border-[#1d3d6b]' : 'bg-emerald-50 text-emerald-600 border-emerald-100/80')
-                                  : (isDarkMode ? 'bg-[#4a1c1c] text-[#ff4c4c] border-[#6b1d1d]' : 'bg-rose-50 text-rose-500 border-rose-100')
-                              }`}>
-                                {font.status === 'installed' ? (
-                                  <>
-                                    <CheckCircle2 className="w-2.5 h-2.5" />
-                                    Ok
-                                  </>
-                                ) : (
-                                  <>
-                                    <AlertCircle className="w-2.5 h-2.5" />
-                                    Manque
-                                  </>
-                                )}
-                              </span>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <button
+                                  onClick={() => handlePreviewFont(font)}
+                                  className="px-1.5 py-0.5 bg-sky-950/20 hover:bg-sky-900/40 text-sky-400 hover:text-sky-300 border border-sky-900/50 rounded text-[8px] font-bold cursor-pointer flex items-center gap-1 transition-all"
+                                  title="Aperçu interactif de la typographie"
+                                >
+                                  <Eye className="w-2.5 h-2.5" />
+                                  Aperçu
+                                </button>
+                                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border ${
+                                  font.status === 'installed'
+                                    ? (isDarkMode ? 'bg-[#1c2e4a] text-[#30a1ff] border-[#1d3d6b]' : 'bg-emerald-50 text-emerald-600 border-emerald-100/80')
+                                    : (isDarkMode ? 'bg-[#4a1c1c] text-[#ff4c4c] border-[#6b1d1d]' : 'bg-rose-50 text-rose-500 border-rose-100')
+                                }`}>
+                                  {font.status === 'installed' ? (
+                                    <>
+                                      <CheckCircle2 className="w-2.5 h-2.5" />
+                                      Ok
+                                    </>
+                                  ) : (
+                                    <>
+                                      <AlertCircle className="w-2.5 h-2.5" />
+                                      Manque
+                                    </>
+                                  )}
+                                </span>
+                              </div>
                             </div>
 
                              {/* Panel contextual action buttons */}
@@ -1601,9 +1644,19 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                             <span className="font-extrabold text-[#DCC0F7] font-display">{f.family}</span>
                             <span className="text-[10px] text-gray-500 font-medium">{f.style} • Fournisseur : {f.provider || 'Inconnu'}</span>
                           </div>
-                          <span className="text-[9px] font-black text-red-400 bg-red-950/20 border border-red-900/35 px-2.5 py-0.5 rounded-full font-mono">
-                            Manquant
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handlePreviewFont(f)}
+                              className="p-1 px-1.5 bg-gray-500/10 hover:bg-[#8FE0EB]/15 text-gray-400 hover:text-[#8FE0EB] border border-gray-800 rounded text-[9px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+                              title="Aperçu interactif"
+                            >
+                              <Eye className="w-3 h-3" />
+                              Aperçu
+                            </button>
+                            <span className="text-[9px] font-black text-red-400 bg-red-950/20 border border-red-900/35 px-2.5 py-0.5 rounded-full font-mono shrink-0">
+                              Manquant
+                            </span>
+                          </div>
                         </div>
                       ))
                   )}
@@ -1633,6 +1686,178 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
                 >
                   <Download className="w-4 h-4" />
                   Démarrer l'Installation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GLOBAL FONT PREVIEW PLAYGROUND MODAL */}
+      {showPreviewModal && activeFontForPreview && (
+        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+          <div className="flex flex-col max-w-lg w-full relative text-gray-200">
+            {/* Folder Tab style header */}
+            <div className="self-start px-5 py-2 bg-[#8FE0EB] text-[#0C0D0E] font-display font-black text-[10px] tracking-widest uppercase rounded-t-[14px] -mb-px flex items-center gap-1.5 shadow-md">
+              <Eye className="w-3.5 h-3.5" />
+              Aperçu Typographique Sawa
+            </div>
+
+            <div className="bg-[#121316] border border-[#202128] rounded-[24px] rounded-tl-none p-6 shadow-2xl relative">
+              <div className="flex items-start justify-between mb-4 pb-3 border-b border-[#202128]">
+                <div>
+                  <h4 className="text-xl font-black text-white font-display tracking-tight leading-none mb-1">
+                    {activeFontForPreview.family}
+                  </h4>
+                  <p className="text-[10px] text-gray-400 font-mono">
+                    {activeFontForPreview.style} • {activeFontForPreview.category} • {activeFontForPreview.provider}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setShowPreviewModal(false)}
+                  className="text-gray-500 hover:text-gray-400 text-xl cursor-pointer font-bold transition"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {/* Sample Quick Selector */}
+              <div className="mb-4 space-y-1.5">
+                <span className="text-[8.5px] uppercase font-mono tracking-wider text-gray-400 font-bold block">Phrases modèles rapides :</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: "Français", text: "Portez ce vieux whisky au juge blond qui fume." },
+                    { label: "English", text: "The quick brown fox jumps over the lazy dog." },
+                    { label: "Chiffres & Symboles", text: "1234567890 & # @ * ! ? ( ) [ ]" },
+                    { label: "Texte Marque", text: "SAWA Font Scout : Intelligent, local, instantané." }
+                  ].map((preset, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setPreviewText(preset.text)}
+                      className={`px-2.5 py-1 text-[9px] rounded-full font-bold cursor-pointer transition-all ${
+                        previewText === preset.text 
+                          ? 'bg-[#8FE0EB] text-[#0C0D0E] border border-transparent' 
+                          : 'bg-[#1a1b20] text-gray-400 border border-[#252731] hover:text-gray-200'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Customizable Editor Area */}
+              <div className="mb-4 space-y-1">
+                <label className="text-[8.5px] uppercase font-mono tracking-wider text-gray-400 font-bold flex justify-between">
+                  <span>Saisir votre propre texte :</span>
+                  <span>{previewText.length}/100</span>
+                </label>
+                <input
+                  type="text"
+                  maxLength={100}
+                  value={previewText}
+                  onChange={(e) => setPreviewText(e.target.value)}
+                  className="w-full px-3 py-2 bg-[#0a0a0c] border border-[#202128] rounded-[12px] text-xs text-white focus:outline-none focus:border-[#8FE0EB] placeholder-gray-650 transition-all font-sans font-light"
+                  placeholder="Tapez quelque chose ici pour tester..."
+                />
+              </div>
+
+              {/* Controls Grid */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="space-y-1 bg-[#1a1b20]/45 p-3 rounded-[16px] border border-[#202128]">
+                  <span className="text-[8.5px] uppercase font-mono tracking-wider text-gray-400 font-bold block">Taille : {previewSize}px</span>
+                  <input
+                    type="range"
+                    min={14}
+                    max={72}
+                    value={previewSize}
+                    onChange={(e) => setPreviewSize(Number(e.target.value))}
+                    className="w-full h-1.5 bg-[#0a0a0c] rounded-lg appearance-none cursor-pointer accent-[#8FE0EB]"
+                  />
+                </div>
+
+                <div className="space-y-1 bg-[#1a1b20]/45 p-3 rounded-[16px] border border-[#202128]">
+                  <span className="text-[8.5px] uppercase font-mono tracking-wider text-gray-400 font-bold block">Style de Palette :</span>
+                  <div className="flex items-center gap-1.5 h-6">
+                    {[
+                      { bg: "#121316", text: "#A3EAD2" },
+                      { bg: "#121316", text: "#ffffff" },
+                      { bg: "#FDFBF7", text: "#0F1115" },
+                      { bg: "#F43F5E", text: "#ffffff" }
+                    ].map((palette, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setPreviewBg(palette.bg);
+                          setPreviewTextColor(palette.text);
+                        }}
+                        className={`w-5 h-5 rounded-full border flex items-center justify-center cursor-pointer transition-all ${
+                          previewBg === palette.bg && previewTextColor === palette.text
+                            ? 'scale-110 ring-2 ring-[#8FE0EB]' 
+                            : 'border-[#252731]'
+                        }`}
+                        style={{ backgroundColor: palette.bg }}
+                        title="Changer le style"
+                      >
+                        <span className="text-[7px] font-black" style={{ color: palette.text }}>A</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual Rendering Playground Box */}
+              <div 
+                className="p-5 min-h-[140px] rounded-[18px] border border-[#202128] mb-5 flex items-center justify-center text-center overflow-hidden relative shadow-inner select-text transition-all duration-300"
+                style={{ backgroundColor: previewBg }}
+              >
+                <div 
+                  className="font-light tracking-normal select-text break-words leading-snug w-full transition-all duration-300"
+                  style={{ 
+                    fontFamily: `"${activeFontForPreview.family}", -apple-system, sans-serif`,
+                    fontSize: `${previewSize}px`,
+                    color: previewTextColor,
+                  }}
+                >
+                  {previewText || "Saisissez du texte..."}
+                </div>
+                
+                {/* Source marker badge */}
+                <div className="absolute bottom-2 right-2.5 text-[8px] font-mono opacity-40 uppercase tracking-widest bg-black/40 px-2 py-0.5 rounded-full" style={{ color: previewTextColor }}>
+                  Source : {activeFontForPreview.provider}
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2.5 p-4 rounded-[16px] text-gray-400 bg-[#1a1b20]/30 border border-[#202128] text-xs leading-normal mb-5 font-sans font-light">
+                <BookOpen className="w-4 h-4 shrink-0 text-[#8FE0EB]" />
+                <div className="space-y-1">
+                  <span className="text-white font-bold block text-[10px] uppercase tracking-wide">Fiche technique :</span>
+                  <p className="text-[10px] leading-relaxed">
+                    PostScript : <code className="font-mono bg-black/45 px-1 py-0.5 rounded text-orange-400 text-[9px]">{activeFontForPreview.postScriptName || 'Non spécifié'}</code><br />
+                    Licence : <strong className="text-white">{activeFontForPreview.license || 'OFL / Libre'}</strong> • Catégorie : <strong className="text-white">{activeFontForPreview.category || 'Standard'}</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center border-t pt-4 border-[#202128]">
+                {activeFontForPreview.googleFontUrl || activeFontForPreview.fontUrl ? (
+                  <a 
+                    href={activeFontForPreview.googleFontUrl || activeFontForPreview.fontUrl} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="text-[#8FE0EB] hover:underline flex items-center gap-1.5 font-bold uppercase tracking-widest text-[8.5px]"
+                  >
+                    Site Source {activeFontForPreview.provider} ↗
+                  </a>
+                ) : (
+                  <span className="text-[8.5px] font-mono text-gray-500 uppercase tracking-wider">Police système standard</span>
+                )}
+                
+                <button
+                  onClick={() => setShowPreviewModal(false)}
+                  className="bg-[#A3EAD2] hover:bg-[#8fd0bc] text-[#0C0D0E] px-5 py-2 rounded-full text-xs font-black cursor-pointer transition-all shadow-md shadow-[#A3EAD2]/10"
+                >
+                  Fermer
                 </button>
               </div>
             </div>

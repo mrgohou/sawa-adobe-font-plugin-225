@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import JSZip from 'jszip';
 import { 
   AppWindow, 
-  Code, 
   BookOpen, 
   Sparkles, 
   Terminal, 
@@ -35,14 +34,13 @@ import {
 } from 'lucide-react';
 
 import HostSimulator from './components/HostSimulator';
-import CodeViewer from './components/CodeViewer';
 import Documentation from './components/Documentation';
 import GeminiFontConsultant from './components/GeminiFontConsultant';
 import { useFirebase } from './context/FirebaseContext';
 import { PLUGIN_CODE_FILES } from './data/pluginCode';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'simulator' | 'code' | 'docs' | 'ai'>('simulator');
+  const [activeTab, setActiveTab] = useState<'simulator' | 'docs' | 'ai'>('simulator');
   const isDarkMode = true;
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -589,23 +587,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               <span>Simulateur</span>
             </button>
 
-            {/* Tab: Code */}
-            <button
-              id="tab-code"
-              onClick={() => setActiveTab('code')}
-              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black cursor-pointer transition-all rounded-full ${
-                activeTab === 'code'
-                  ? 'bg-[#DCC0F7] text-[#0C0D0E] shadow-lg'
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              {activeTab === 'code' ? (
-                <Check className="w-3.5 h-3.5 text-inherit stroke-[3px]" />
-              ) : (
-                <Code className="w-3.5 h-3.5 text-inherit" />
-              )}
-              <span>Code Source</span>
-            </button>
+
 
             {/* Tab: Docs */}
             <button
@@ -644,9 +626,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               {activeTab === 'simulator' && (
                 <HostSimulator isDarkMode={isDarkMode} />
               )}
-              {activeTab === 'code' && (
-                <CodeViewer onDownloadComplete={() => { setShowInstallWalkthrough(true); setWalkthroughStep(1); }} />
-              )}
+
               {activeTab === 'docs' && <Documentation />}
             </motion.div>
           </AnimatePresence>

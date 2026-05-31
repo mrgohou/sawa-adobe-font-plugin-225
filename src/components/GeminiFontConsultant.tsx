@@ -9,16 +9,16 @@ interface ChatMessage {
 
 const CONSULTANT_TEMPLATES = [
   {
-    title: "Permission Réseau manifest.json",
-    prompt: "Comment configurer correctement la section 'requiredPermissions' dans le manifest.json UXP pour interroger l'API Google Fonts ?"
+    title: "Associations Harmonieuses",
+    prompt: "Quelles sont les meilleures règles d'or et astuces graphiques pour associer des polices Serif et Sans-Serif dans un design moderne ?"
   },
   {
-    title: "InDesign Missing Fonts API",
-    prompt: "Comment utiliser l'API UXP spécifique d'InDesign pour vérifier qu'une police a le statut 'Missing' (Manquante) dans le document ouvert ?"
+    title: "Lisibilité sur Écrans",
+    prompt: "Quels types de polices et caractéristiques géométriques garantissent une lisibilité optimale pour la lecture de longs textes sur les écrans mobiles ?"
   },
   {
-    title: "Écrire un binaire TTF local",
-    prompt: "Écris le code JavaScript UXP complet pour télécharger un fichier binaire de police TTF (depuis une URL) et l'écrire localement dans un dossier système choisi par l'utilisateur."
+    title: "Licences & Droits d'Auteur",
+    prompt: "Peux-tu m'expliquer clairement la différence entre les licences de polices OFL (Open Font License), domaine public, commercial et usage exclusif ?"
   }
 ];
 
@@ -82,7 +82,7 @@ export default function GeminiFontConsultant({ isWidget = false }: GeminiFontCon
       }
     } catch (err: any) {
       console.error(err);
-      const fallbackMsg = "Désolé ! Une erreur de réseau ou de communication est survenue. L'API d'arrière-plan n'a pas pu traiter la demande.\n\n**Conseil d'Architecture UXP :** Veillez à déclarer vos requêtes réseaux au sein du manifeste de votre extension et d'exécuter vos routines d'API de façon asynchrone.";
+      const fallbackMsg = "Désolé ! Une erreur de réseau ou de communication est survenue. L'API d'arrière-plan n'a pas pu traiter la demande.\n\n**Recommandation Typographique :** Lorsque vous choisissez des polices pour des projets Adobe, privilégiez un fort contraste d'épaisseur ou d'œil afin de donner du dynamisme à vos compositions.";
       
       if (user) {
         await syncChatMessage('model', fallbackMsg);
@@ -110,9 +110,9 @@ export default function GeminiFontConsultant({ isWidget = false }: GeminiFontCon
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-400" />
-              <h2 className="text-base font-semibold text-gray-150">Assistant de Développement UXP - Gemini API</h2>
+              <h2 className="text-base font-semibold text-gray-150">Expert Typographie & Design - Gemini API</h2>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Interrogez l'intelligence artificielle pour résoudre vos défis d'API Adobe, de bac à sable Windows/macOS, ou d'optimisation.</p>
+            <p className="text-xs text-gray-500 mt-1">Interrogez l'intelligence artificielle pour tout savoir sur l'histoire des caractères, les associations, la lisibilité et l'art de la typographie.</p>
           </div>
           
           {messages.length > 0 && (
@@ -203,7 +203,7 @@ export default function GeminiFontConsultant({ isWidget = false }: GeminiFontCon
         {loading && (
           <div className="flex gap-3.5 p-4 rounded-xl text-xs bg-[#0f1115] border border-indigo-950/20 text-gray-400 mr-10 animate-pulse">
             <Bot className="w-5 h-5 text-purple-400 shrink-0" />
-            <span>Gemini analyse les contraintes du SDK Adobe UXP...</span>
+            <span>Gemini élabore vos conseils en typographie et design...</span>
           </div>
         )}
 
@@ -220,7 +220,7 @@ export default function GeminiFontConsultant({ isWidget = false }: GeminiFontCon
         <input
           disabled={loading}
           type="text"
-          placeholder={isWidget ? "Une question ?" : "Posez votre question sur les API Adobe UXP..."}
+          placeholder={isWidget ? "Une question ?" : "Posez votre question sur les polices, l'harmonisation ou le design..."}
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
