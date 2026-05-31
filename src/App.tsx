@@ -21,6 +21,7 @@ import {
   Laptop, 
   Cpu, 
   FileCode, 
+  FileDown,
   ArrowRight,
   Shield,
   Search,
@@ -35,12 +36,13 @@ import {
 
 import HostSimulator from './components/HostSimulator';
 import Documentation from './components/Documentation';
+import AdobeDocsExplorer from './components/AdobeDocsExplorer';
 import GeminiFontConsultant from './components/GeminiFontConsultant';
 import { useFirebase } from './context/FirebaseContext';
 import { PLUGIN_CODE_FILES } from './data/pluginCode';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'simulator' | 'docs' | 'ai'>('simulator');
+  const [activeTab, setActiveTab] = useState<'simulator' | 'docs' | 'adobe-docs' | 'ai'>('simulator');
   const isDarkMode = true;
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -661,7 +663,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black cursor-pointer transition-all rounded-full ${
                 activeTab === 'docs'
                   ? 'bg-[#8FE0EB] text-[#0C0D0E] shadow-lg'
-                  : 'text-gray-450 hover:text-gray-200'
+                  : 'text-gray-455 hover:text-gray-200'
               }`}
             >
               {activeTab === 'docs' ? (
@@ -670,6 +672,24 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <BookOpen className="w-3.5 h-3.5 text-inherit" />
               )}
               <span>Guide Tech</span>
+            </button>
+
+            {/* Tab: Adobe Docs */}
+            <button
+              id="tab-adobe-docs"
+              onClick={() => setActiveTab('adobe-docs')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black cursor-pointer transition-all rounded-full ${
+                activeTab === 'adobe-docs'
+                  ? 'bg-[#DCC0F7] text-[#0C0D0E] shadow-lg'
+                  : 'text-gray-455 hover:text-gray-200'
+              }`}
+            >
+              {activeTab === 'adobe-docs' ? (
+                <Check className="w-3.5 h-3.5 text-inherit stroke-[3px]" />
+              ) : (
+                <FileDown className="w-3.5 h-3.5 text-inherit" />
+              )}
+              <span>Consoles PDF (10)</span>
             </button>
           </div>
         </div>
@@ -693,6 +713,8 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               )}
 
               {activeTab === 'docs' && <Documentation />}
+
+              {activeTab === 'adobe-docs' && <AdobeDocsExplorer />}
             </motion.div>
           </AnimatePresence>
         </div>
