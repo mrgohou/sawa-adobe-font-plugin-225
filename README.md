@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="SAWA" src="[https://ai.google.dev/static/site-assets/images/share-ais-513315318.png](https://srv1691-files.hstgr.io/c8beb8244c93cc26/files/public_html/logo_/1300x600px-_-FontFinder.jpg)" />
+<img width="1200" height="475" alt="SAWA" src="[https://ai.google.dev/static/site-assets/images/share-ais-513315318.png](https://srv1691-files.hstgr.io/c8beb8244c93cc26/files/public_html/logo_/1300x600px-_-FontFinder.jpg](https://srv1691-files.hstgr.io/c8beb8244c93cc26/api/raw/nodejs/.img/logo_/1300x600px-_-FontFinder.jpg?inline=true)" />
 </div>
 
 # Trouvez et installez vos polices directement dans vos calques
