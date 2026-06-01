@@ -225,7 +225,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
         {/* Right side CTA & Sign-in */}
         <div className="flex items-center gap-3">
           <a 
-            href="https://github.com/mrgohou/sawa-adobe-plugin-fontfinder" 
+            href="https://github.com/mrgohou/sawa-adobe-font-plugin-225" 
             target="_blank" 
             rel="noreferrer" 
             className="p-2 rounded-lg border border-gray-800 bg-[#121316] text-gray-400 hover:text-white hover:bg-gray-800 transition-all text-center flex items-center"
