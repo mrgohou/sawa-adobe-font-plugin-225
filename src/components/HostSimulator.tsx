@@ -857,7 +857,7 @@ export default function HostSimulator({ isDarkMode = true }: HostSimulatorProps)
             1. Application Hôte Adobe CC
           </div>
           <div className="p-5 rounded-[24px] rounded-tl-none border border-[#202127]/60 bg-[#121316] text-[#f3f4f6] shadow-xl">
-            <p className="text-[11px] mb-4.5 leading-relaxed text-gray-400">
+            <p className="text-[13px] mb-4.5 leading-relaxed text-gray-400">
               Sélectionnez l'un des 6 hôtes Creative Cloud compatibles pour émuler la détection des polices de calques natifs de l'API UXP correspondante.
             </p>
             <div className="grid grid-cols-2 gap-2.5">

@@ -37,6 +37,7 @@ import {
 import HostSimulator from './components/HostSimulator';
 import Documentation from './components/Documentation';
 import AdobeDocsExplorer from './components/AdobeDocsExplorer';
+import CountUp from './components/CountUp';
 import GeminiFontConsultant from './components/GeminiFontConsultant';
 import { useFirebase } from './context/FirebaseContext';
 import { PLUGIN_CODE_FILES } from './data/pluginCode';
@@ -372,9 +373,11 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               <span className="text-[11px] font-bold text-[#0C0D0E]/70 uppercase tracking-wider">Polices Système</span>
               <div className="mt-2.5">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold tracking-tight">54</span>
+                  <span className="text-4xl font-extrabold tracking-tight">
+                    <CountUp to={54} />
+                  </span>
                   <span className="text-[10px] text-white bg-[#0C0D0E] px-2 py-0.5 rounded-full font-black flex items-center gap-0.5 shadow-xs">
-                    ↑ 50%
+                    ↑ <CountUp to={50} suffix="%" />
                   </span>
                 </div>
                 <p className="text-[10px] text-[#0C1D0E]/60 mt-1.5 font-medium">Capacité optimale détectée</p>
@@ -394,13 +397,30 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
                   <svg className="w-full h-full transform -rotate-90">
                     <circle cx="24" cy="24" r="18" stroke="#0C0D0E" strokeWidth="5" fill="transparent" className="opacity-15" />
-                    <circle cx="24" cy="24" r="18" stroke="#0C0D0E" strokeWidth="5" fill="transparent" strokeDasharray="113" strokeDashoffset="45" strokeLinecap="round" />
+                    <motion.circle 
+                      cx="24" 
+                      cy="24" 
+                      r="18" 
+                      stroke="#0C0D0E" 
+                      strokeWidth="5" 
+                      fill="transparent" 
+                      strokeDasharray="113" 
+                      initial={{ strokeDashoffset: 113 }}
+                      whileInView={{ strokeDashoffset: 45 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1.6, ease: "easeOut" }}
+                      strokeLinecap="round" 
+                    />
                   </svg>
-                  <span className="absolute text-[9px] font-extrabold text-[#0C0D0E]">60%</span>
+                  <span className="absolute text-[9px] font-extrabold text-[#0C0D0E]">
+                    <CountUp to={60} suffix="%" />
+                  </span>
                 </div>
                 <div>
                   <span className="text-xl font-extrabold block">UXP v2</span>
-                  <span className="block text-[9.5px] leading-tight text-[#0C0D0E]/60 font-medium">92% d'automatisation</span>
+                  <span className="block text-[9.5px] leading-tight text-[#0C0D0E]/60 font-medium">
+                    <CountUp to={92} suffix="%" /> d'automatisation
+                  </span>
                 </div>
               </div>
             </div>
@@ -416,7 +436,9 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               <span className="text-[11px] font-bold text-[#0C0D0E]/70 uppercase tracking-wider">Erreurs évitées</span>
               <div className="mt-2 text-left">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold tracking-tight">12</span>
+                  <span className="text-4xl font-extrabold tracking-tight">
+                    <CountUp to={12} />
+                  </span>
                   <span className="text-[9px] font-bold opacity-75">fichiers</span>
                 </div>
                 <p className="text-[10px] text-[#0C0D0E]/60 mt-1 font-medium leading-tight">Analyses instantanées sans dialogue</p>
@@ -434,10 +456,16 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Vitesse de Scan</span>
               <div className="mt-2.5 w-full">
                 <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#A3EAD2]/10 border border-[#A3EAD2]/20 text-[#A3EAD2] rounded-full text-[9px] font-mono">
-                  Fast Engine : ~20ms
+                  Fast Engine : ~<CountUp to={20} from={300} duration={1.2} suffix="ms" />
                 </div>
                 <div className="w-full bg-[#1F2025] h-1.5 rounded-full mt-3 overflow-hidden border border-[#25272F]">
-                  <div className="bg-gradient-to-r from-[#DCC0F7] to-[#A3EAD2] h-full rounded-full" style={{ width: '85%' }} />
+                  <motion.div 
+                    className="bg-gradient-to-r from-[#DCC0F7] to-[#A3EAD2] h-full rounded-full" 
+                    initial={{ width: '0%' }}
+                    whileInView={{ width: '85%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.6, ease: "easeOut" }}
+                  />
                 </div>
               </div>
             </div>
@@ -467,7 +495,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <Search className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Analyse Instantanée des Documents</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Le script interroge directement l'architecture DOM d'Adobe Creative Cloud pour extraire la liste complète des calques et styles textuels. Notre moteur repère instantanément chaque police non recensée sur votre machine.
               </p>
             </div>
@@ -481,7 +509,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <Zap className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Téléchargement & Double-Clic Automatisé</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Interfacé avec le catalogue public de Google Fonts (contenant 1500+ familles de polices open-source), le plugin télécharge l'élément .ttf manquant de façon transparente vers votre disque en un instant.
               </p>
             </div>
@@ -495,7 +523,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <Cloud className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Synchronisation Cloud Firestore</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Grâce au backend unifié Google Firebase, synchronisez à distance toutes vos installations et examinez votre historique de scans de documents. Retrouvez vos polices automatiquement d'un poste fixe à un ordinateur portable !
               </p>
             </div>
@@ -509,7 +537,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <Layers className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Multi-Support Suite Creative</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Une base de code saine qui épouse parfaitement les spécificités de chaque conteneur. Le plugin s'exécute avec brio sous Photoshop, Illustrator, Premiere, After Effects, InDesign ou InCopy de façon transparente.
               </p>
             </div>
@@ -523,7 +551,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <Sparkles className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Conseils Typographiques IA (Gemini)</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Une police de remplacement s'impose ? Notre IA intégrée vous propose les meilleures associations esthétiques et les alternatives visuelles idéales adaptées à l'intention comportementale de votre travail de maquettiste.
               </p>
             </div>
@@ -537,7 +565,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
                 <FileCode className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-extrabold text-gray-150 font-display">Architecture Nettoyée & Légère</h3>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
                 Zéro dépendance lourde inutile. S'appuie uniquement sur des API JavaScript standards UXP modernes et s'intègre au système d'origine Adobe Spectrum pour garantir un design familier et un rendu parfait.
               </p>
             </div>
@@ -567,7 +595,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               1
             </div>
             <h3 className="text-sm font-black text-white font-display">Télécharger</h3>
-            <p className="text-[12px] text-gray-450 leading-relaxed font-light">
+            <p className="text-[14px] text-gray-450 leading-relaxed font-light">
               Téléchargez le fichier compilé <strong className="text-gray-200">.zip</strong> de Sawa Font Finder contenant le manifeste Adobe Spectrum, les contrôleurs d'API et les scripts locaux.
             </p>
           </div>
@@ -578,7 +606,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               2
             </div>
             <h3 className="text-sm font-black text-white font-display">Ouvrir UDT</h3>
-            <p className="text-[12px] text-gray-450 leading-relaxed font-light">
+            <p className="text-[14px] text-gray-450 leading-relaxed font-light">
               Téléchargez et ouvrez l'utilitaire gratuit <strong className="text-gray-200">Adobe UXP Developer Tool (UDT)</strong> distribué directement par Adobe Creative Cloud.
             </p>
           </div>
@@ -589,7 +617,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               3
             </div>
             <h3 className="text-sm font-black text-white font-display">Cibler le Manifeste</h3>
-            <p className="text-[12px] text-gray-450 leading-relaxed font-light">
+            <p className="text-[14px] text-gray-450 leading-relaxed font-light">
               Extrayez l'archive ZIP, cliquez sur <strong className="text-gray-200">Add Plugin</strong> dans UDT, puis pointez vers le fichier <strong className="text-[#8FE0EB]">manifest.json</strong> généré dans l'extension.
             </p>
           </div>
@@ -600,7 +628,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
               4
             </div>
             <h3 className="text-sm font-black text-white font-display">Exécuter</h3>
-            <p className="text-[12px] text-gray-450 leading-relaxed font-light">
+            <p className="text-[14px] text-gray-450 leading-relaxed font-light">
               Sélectionnez votre application hôte active, cliquez sur <strong className="text-emerald-400 font-semibold">Load</strong>. Le panneau Sawa apparait et scanne vos calques en temps réel !
             </p>
           </div>
@@ -629,7 +657,7 @@ Pour installer manuellement le plugin sans passer par le Creative Cloud Develope
             <h2 className="text-2xl font-display font-medium text-white tracking-tight">
               Testez l'extension en direct !
             </h2>
-            <p className="text-xs text-gray-400 max-w-2xl mt-1 leading-relaxed">
+            <p className="text-sm text-gray-400 max-w-2xl mt-1 leading-relaxed">
               Utilisez ce panneau d'activité pour prévisualiser la réactivité de l'UXP. Synchronisez votre profil via Google ou testez avec les différents types de fichiers.
             </p>
           </div>
